@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ropa · Cami & Mati</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0e0c;
+  --surface: #1a1916;
+  --surface2: #222018;
+  --surface3: #2a2824;
+  --border: #2e2c28;
+  --border2: #3a3832;
+  --text: #f0ece4;
+  --text-muted: #7a7570;
+  --text-dim: #4a4844;
+  --papa: #4f9de0;
+  --papa-dim: rgba(79,157,224,0.12);
+  --papa-mid: rgba(79,157,224,0.25);
+  --mama: #d47fa0;
+  --mama-dim: rgba(212,127,160,0.12);
+  --mama-mid: rgba(212,127,160,0.25);
+  --gold: #c9a96e;
+  --gold-dim: rgba(201,169,110,0.15);
+  --ok: #5aab7a;
+  --ok-dim: rgba(90,171,122,0.12);
+  --warn: #d4935a;
+  --warn-dim: rgba(212,147,90,0.12);
+  --danger: #d45a5a;
+  --danger-dim: rgba(212,90,90,0.12);
+  --r: 12px;
+  --rs: 8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased;}
+header{padding:16px 20px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;letter-spacing:-0.3px;}
+.logo em{color:var(--gold);font-style:italic;}
+.header-meta{text-align:right;font-size:11px;color:var(--text-muted);line-height:1.5;}
+.tabs{display:flex;gap:2px;padding:14px 20px 0;border-bottom:1px solid var(--border);margin-top:12px;}
+.tab{flex:1;padding:9px 6px 10px;background:none;border:none;border-bottom:2px solid transparent;font-family:'Outfit',sans-serif;font-size:12px;font-weight:400;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:.2px;}
+.tab.active{color:var(--text);font-weight:600;border-bottom-color:var(--gold);}
+main{max-width:640px;margin:0 auto;padding:20px 16px 100px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px;}
+.card-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.section-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin:18px 0 10px;}
+.section-label:first-child{margin-top:0;}
+
+/* TODAY */
+.today-hero{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 20px 18px;margin-bottom:12px;position:relative;overflow:hidden;}
+.today-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold) 0%,transparent 100%);}
+.today-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.today-dayname{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;letter-spacing:-1px;color:var(--text);line-height:1;}
+.today-date{font-size:11px;color:var(--text-muted);margin-top:4px;}
+.custody-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.3px;}
+.custody-tag.papa{background:var(--papa-dim);color:var(--papa);border:1px solid var(--papa-mid);}
+.custody-tag.mama{background:var(--mama-dim);color:var(--mama);border:1px solid var(--mama-mid);}
+.custody-tag .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+.alert{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:var(--rs);margin-bottom:8px;font-size:13px;line-height:1.45;border:1px solid transparent;}
+.alert:last-child{margin-bottom:0;}
+.alert-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+.alert.ok{background:var(--ok-dim);border-color:rgba(90,171,122,.2);color:#8dd4aa;}
+.alert.warn{background:var(--warn-dim);border-color:rgba(212,147,90,.2);color:#e0aa7a;}
+.alert.danger{background:var(--danger-dim);border-color:rgba(212,90,90,.2);color:#e08080;}
+.tomorrow-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-dim);margin-bottom:10px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);}
+
+/* SEMANA */
+.week-grid{display:flex;flex-direction:column;gap:6px;}
+.wday{border:1px solid var(--border);border-radius:var(--rs);overflow:hidden;transition:border-color .2s;}
+.wday.today{border-color:var(--gold);}
+.wday-header{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--surface2);cursor:pointer;user-select:none;gap:10px;}
+.wday-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0;}
+.wday-name{font-size:13px;font-weight:500;color:var(--text);}
+.wday.today .wday-name{color:var(--gold);}
+.wday-who{font-size:11px;color:var(--text-muted);}
+.wday-badge{font-size:10px;padding:3px 8px;border-radius:10px;font-weight:600;flex-shrink:0;}
+.wday-badge.ok{background:var(--ok-dim);color:var(--ok);}
+.wday-badge.danger{background:var(--danger-dim);color:var(--danger);}
+.wday-badge.neutral{background:var(--surface3);color:var(--text-muted);}
+.wday-body{display:none;padding:12px 14px;border-top:1px solid var(--border);background:var(--surface);}
+.wday-body.open{display:block;}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:4px 0;font-size:12px;line-height:1.4;}
+.check-item .ci-icon{font-size:12px;width:14px;flex-shrink:0;margin-top:1px;}
+.check-item.ok-item{color:var(--ok);}
+.check-item.bad-item{color:var(--danger);}
+.check-item.info-item{color:var(--text-muted);}
+
+/* STOCK */
+.hija-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:3px;gap:3px;margin-bottom:14px;}
+.hija-btn{flex:1;padding:7px;border-radius:6px;border:none;background:none;font-family:'Outfit',sans-serif;font-size:13px;font-weight:400;color:var(--text-muted);cursor:pointer;transition:all .2s;}
+.hija-btn.active{background:var(--surface3);color:var(--text);font-weight:600;}
+.hogar-toggle{display:flex;gap:8px;margin-bottom:18px;}
+.hogar-btn{flex:1;padding:9px;border-radius:var(--rs);border:1.5px solid var(--border);background:none;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .2s;letter-spacing:.2px;}
+.hogar-btn.papa.active{background:var(--papa-dim);border-color:var(--papa);color:var(--papa);}
+.hogar-btn.mama.active{background:var(--mama-dim);border-color:var(--mama);color:var(--mama);}
+.prenda-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.prenda-row:last-child{border-bottom:none;}
+.prenda-info{flex:1;min-width:0;}
+.prenda-name{font-size:13px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.stepper{display:flex;align-items:center;gap:8px;}
+.stepper button{width:26px;height:26px;border-radius:50%;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1;padding:0;}
+.stepper button:hover{border-color:var(--text-muted);background:var(--surface3);}
+.stepper .qty{font-size:15px;font-weight:600;min-width:20px;text-align:center;color:var(--text);}
+.qty.zero{color:var(--danger);}
+.btn-del{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:18px;padding:2px 4px;border-radius:4px;transition:color .15s;line-height:1;}
+.btn-del:hover{color:var(--danger);}
+.add-form{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);}
+.add-form input,.add-form select{padding:9px 11px;border:1px solid var(--border2);border-radius:var(--rs);font-family:'Outfit',sans-serif;font-size:12px;background:var(--surface2);color:var(--text);outline:none;transition:border-color .15s;}
+.add-form input::placeholder{color:var(--text-dim);}
+.add-form input:focus,.add-form select:focus{border-color:var(--gold);}
+.add-form select option{background:var(--surface2);}
+.add-form .full{grid-column:1/-1;}
+.btn-add{grid-column:1/-1;padding:10px;background:var(--gold);color:#0f0e0c;border:none;border-radius:var(--rs);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s;}
+.btn-add:hover{opacity:.85;}
+
+/* CONFIG CALENDARIO */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:14px;}
+.cal-header{text-align:center;font-size:10px;font-weight:600;color:var(--text-dim);padding:4px 0;text-transform:uppercase;letter-spacing:.5px;}
+.cal-cell{aspect-ratio:1;border-radius:6px;border:1px solid var(--border);background:var(--surface2);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;font-size:9px;color:var(--text-muted);gap:1px;user-select:none;}
+.cal-cell:hover{border-color:var(--border2);}
+.cal-cell .cal-num{font-size:13px;font-weight:600;color:var(--text);}
+.cal-cell.papa-cell{background:var(--papa-dim);border-color:var(--papa-mid);}
+.cal-cell.mama-cell{background:var(--mama-dim);border-color:var(--mama-mid);}
+.cal-cell.papa-cell .cal-num{color:var(--papa);}
+.cal-cell.mama-cell .cal-num{color:var(--mama);}
+.cal-cell.past{opacity:.35;pointer-events:none;}
+.cal-cell.today-cell{box-shadow:0 0 0 1.5px var(--gold);}
+.cal-legend{display:flex;gap:10px;margin-bottom:14px;}
+.leg-item{display:flex;align-items:center;gap:5px;color:var(--text-muted);cursor:pointer;padding:6px 12px;border-radius:var(--rs);border:1.5px solid var(--border);transition:all .15s;font-size:12px;font-weight:500;}
+.leg-item.sel-papa{border-color:var(--papa);background:var(--papa-dim);color:var(--papa);}
+.leg-item.sel-mama{border-color:var(--mama);background:var(--mama-dim);color:var(--mama);}
+.leg-dot{width:9px;height:9px;border-radius:50%;}
+.leg-dot.papa{background:var(--papa);}
+.leg-dot.mama{background:var(--mama);}
+
+/* CONFIG ROPA REQUERIDA */
+.req-day-group{margin-bottom:8px;border:1px solid var(--border);border-radius:var(--rs);overflow:hidden;}
+.req-day-title{padding:10px 14px;background:var(--surface2);font-size:12px;font-weight:600;color:var(--text);display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+.req-day-body{display:none;padding:12px 14px;border-top:1px solid var(--border);background:var(--surface);}
+.req-day-body.open{display:block;}
+.req-item{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--text);}
+.req-item:last-child{border-bottom:none;}
+.req-add{display:flex;gap:6px;margin-top:10px;}
+.req-add input{flex:1;padding:7px 10px;border:1px solid var(--border2);border-radius:var(--rs);font-family:'Outfit',sans-serif;font-size:12px;background:var(--surface2);color:var(--text);outline:none;}
+.req-add input:focus{border-color:var(--gold);}
+.req-add input::placeholder{color:var(--text-dim);}
+.btn-sm{padding:7px 12px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface3);color:var(--text);font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.btn-sm:hover{border-color:var(--gold);color:var(--gold);}
+
+.empty-state{text-align:center;padding:28px 16px;color:var(--text-muted);font-size:13px;}
+.empty-icon{font-size:28px;margin-bottom:8px;opacity:.5;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface3);border:1px solid var(--border2);color:var(--text);padding:9px 18px;border-radius:20px;font-size:12px;font-weight:500;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+@media(max-width:480px){.add-form{grid-template-columns:1fr;}.add-form .full{grid-column:1;}.btn-add{grid-column:1;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Cami <em>&</em> Mati</div>
+  <div class="header-meta" id="headerMeta"></div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('hoy')">Hoy</button>
+  <button class="tab" onclick="showTab('semana')">Semana</button>
+  <button class="tab" onclick="showTab('stock')">Stock</button>
+  <button class="tab" onclick="showTab('config')">Config</button>
+</div>
+
+<main>
+  <!-- HOY -->
+  <div id="tab-hoy">
+    <div class="today-hero">
+      <div class="today-top">
+        <div>
+          <div class="today-dayname" id="todayName"></div>
+          <div class="today-date" id="todayDate"></div>
+        </div>
+        <div id="todayCustody"></div>
+      </div>
+      <div id="alertsHoy"></div>
+      <div class="tomorrow-label">Mañana</div>
+      <div id="alertsMañana"></div>
+    </div>
+  </div>
+
+  <!-- SEMANA -->
+  <div id="tab-semana" style="display:none">
+    <div class="card">
+      <div class="card-title">Próximos 7 días</div>
+      <div class="week-grid" id="weekGrid"></div>
+    </div>
+  </div>
+
+  <!-- STOCK -->
+  <div id="tab-stock" style="display:none">
+    <div class="hija-toggle">
+      <button class="hija-btn active" onclick="selectHija('Camila')">Camila</button>
+      <button class="hija-btn" onclick="selectHija('Matilda')">Matilda</button>
+    </div>
+    <div class="hogar-toggle">
+      <button class="hogar-btn papa active" id="btnPapa" onclick="selectHogar('papa')">👨 Papá</button>
+      <button class="hogar-btn mama" id="btnMama" onclick="selectHogar('mama')">👩 Mamá</button>
+    </div>
+    <div class="card">
+      <div id="stockList"></div>
+      <div class="add-form">
+        <input class="full" type="text" id="newName" placeholder="Nombre de la prenda (ej: Campera azul)">
+        <select id="newCat">
+          <option value="">Categoría…</option>
+          <option>Uniforme</option>
+          <option>Casual</option>
+          <option>Deportiva</option>
+          <option>Abrigo</option>
+          <option>Calzado</option>
+          <option>Accesorios</option>
+        </select>
+        <select id="newEscuela">
+          <option value="no">No es de colegio</option>
+          <option value="si">Necesaria para colegio</option>
+        </select>
+        <button class="btn-add" onclick="addPrenda()">+ Agregar prenda</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIG -->
+  <div id="tab-config" style="display:none">
+    <div class="card">
+      <div class="card-title">📅 ¿Quién tiene a las nenas cada día?</div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;line-height:1.6">
+        Seleccioná <strong style="color:var(--papa)">Papá</strong> o <strong style="color:var(--mama)">Mamá</strong> y tocá los días para asignarlos. Podés cambiar día por día.
+      </p>
+      <div class="cal-legend">
+        <div class="leg-item sel-papa" id="legPapa" onclick="setCalMode('papa')">
+          <div class="leg-dot papa"></div> Papá
+        </div>
+        <div class="leg-item" id="legMama" onclick="setCalMode('mama')">
+          <div class="leg-dot mama"></div> Mamá
+        </div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <p style="font-size:11px;color:var(--text-dim);margin-top:6px">Los días sin asignar usan el patrón semanal por defecto.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">👗 Ropa requerida por día de colegio</div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;line-height:1.6">
+        Definí qué prendas debe haber disponibles en el hogar que tiene a las nenas la noche anterior. La app te avisa si falta algo.
+      </p>
+      <div id="reqConfig"></div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div>
+          <div style="font-size:13px;font-weight:500">Restablecer todo</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Elimina stock, calendario y configuración</div>
+        </div>
+        <button onclick="resetAll()" style="padding:7px 14px;border:1px solid var(--danger);background:none;border-radius:var(--rs);color:var(--danger);font-size:12px;cursor:pointer;font-family:inherit;font-weight:500">Reset</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DIAS     = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const DIAS_FULL = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const MESES    = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const SCHOOL   = new Set([1,2,3,4,5]);
+
+// ── DEFAULTS ────────────────────────────────────────────
+function defStock() {
+  return {
+    Camila: {
+      papa: [
+        {id:1,name:'Uniforme pantalón',cat:'Uniforme',qty:1,escuela:'si'},
+        {id:2,name:'Uniforme campera',cat:'Uniforme',qty:1,escuela:'si'},
+        {id:3,name:'Remera blanca uniforme',cat:'Uniforme',qty:2,escuela:'si'},
+        {id:4,name:'Zapatillas colegio',cat:'Calzado',qty:1,escuela:'si'},
+        {id:5,name:'Buzo casual',cat:'Casual',qty:1,escuela:'no'},
+      ],
+      mama: [
+        {id:6,name:'Uniforme pantalón',cat:'Uniforme',qty:1,escuela:'si'},
+        {id:7,name:'Uniforme campera',cat:'Uniforme',qty:1,escuela:'si'},
+        {id:8,name:'Remera blanca uniforme',cat:'Uniforme',qty:2,escuela:'si'},
+        {id:9,name:'Zapatillas colegio',cat:'Calzado',qty:1,escuela:'si'},
+      ]
+    },
+    Matilda: {
+      papa: [
+        {id:10,name:'Uniforme falda',cat:'Uniforme',qty:1,escuela:'si'},
+        {id:11,name:'Uniforme campera',cat:'Uniforme',qty:1,escuela:'si'},
+        {id:12,name:'Remera blanca uniforme',cat:'Uniforme',qty:2,escuela:'si'},
+        {id:13,name:'Zapatillas colegio',cat:'Calzado',qty:1,escuela:'si'},
+      ],
+      mama: [
+        {id:14,name:'Uniforme falda',cat:'Uniforme',qty:1,escuela:'si'},
+        {id:15,name:'Uniforme campera',cat:'Uniforme',qty:1,escuela:'si'},
+        {id:16,name:'Remera blanca uniforme',cat:'Uniforme',qty:2,escuela:'si'},
+        {id:17,name:'Zapatillas colegio',cat:'Calzado',qty:1,escuela:'si'},
+      ]
+    }
+  };
+}
+
+// Patrón semanal por defecto (dow 0-6)
+// Basado en lo acordado: Mar noche→papá, Mié→papá, Jue noche→mamá
+function defWeek() {
+  return {0:'papa',1:'mama',2:'papa',3:'papa',4:'mama',5:'mama',6:'papa'};
+}
+
+function defRequired() {
+  const base = {1:['Uniforme','Calzado colegio'],2:['Uniforme','Calzado colegio'],3:['Uniforme','Calzado colegio'],4:['Uniforme','Calzado colegio'],5:['Uniforme','Calzado colegio'],0:[],6:[]};
+  return {
+    Camila:  JSON.parse(JSON.stringify(base)),
+    Matilda: JSON.parse(JSON.stringify(base))
+  };
+}
+
+// ── STATE ───────────────────────────────────────────────
+let stock       = JSON.parse(localStorage.getItem('cm_stock_v3')||'null') || defStock();
+let dateCust    = JSON.parse(localStorage.getItem('cm_dates_v3')||'{}');
+let weekCust    = JSON.parse(localStorage.getItem('cm_week_v3')||'null')  || defWeek();
+let required    = JSON.parse(localStorage.getItem('cm_req_v4')||'null')   || defRequired();
+let nextId      = 200;
+let curHija     = 'Camila';
+let curHogar    = 'papa';
+let calMode     = 'papa';
+
+function save() {
+  localStorage.setItem('cm_stock_v3', JSON.stringify(stock));
+  localStorage.setItem('cm_dates_v3', JSON.stringify(dateCust));
+  localStorage.setItem('cm_week_v3',  JSON.stringify(weekCust));
+  localStorage.setItem('cm_req_v4',   JSON.stringify(required));
+}
+
+// ── HELPERS ─────────────────────────────────────────────
+function dateKey(d) {
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function custForDate(d) {
+  const k = dateKey(d);
+  return dateCust[k] || weekCust[d.getDay()] || 'mama';
+}
+
+// La ropa del día de colegio debe estar donde durmieron la noche anterior
+function custNightBefore(d) {
+  const prev = new Date(d); prev.setDate(prev.getDate()-1);
+  return custForDate(prev);
+}
+
+// Quién lleva al colegio según el patrón acordado
+const LLEVA = {1:'mama',2:'mama',3:'papa',4:'papa',5:'mama'};
+
+function norm(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+
+function hasItem(reqItem, hogar, hija) {
+  const prendas = stock[hija][hogar] || [];
+  const found = prendas.find(p =>
+    norm(p.name).includes(norm(reqItem)) || norm(p.cat).includes(norm(reqItem))
+  );
+  return found && found.qty > 0;
+}
+
+function getAlerts(d) {
+  const dow = d.getDay();
+  const alerts = [];
+  const isColegio = SCHOOL.has(dow);
+
+  if (!isColegio) {
+    const c = custForDate(d);
+    alerts.push({type:'ok', text:`Sin colegio · Las nenas están con ${c==='papa'?'Papá':'Mamá'}`});
+    return alerts;
+  }
+
+  const nightHogar = custNightBefore(d);
+  const lleva = LLEVA[dow] || nightHogar;
+  const llevaLabel = lleva==='papa'?'Papá':'Mamá';
+  const hogarLabel = nightHogar==='papa'?'Papá':'Mamá';
+
+  alerts.push({type:'ok', text:`Colegio · ${llevaLabel} lleva · Ropa en casa de ${hogarLabel}`});
+
+  let allOk = true;
+  let alguienConf = false;
+  ['Camila','Matilda'].forEach(hija => {
+    const req = (required[hija] && required[hija][dow]) || [];
+    if (req.length > 0) alguienConf = true;
+    req.forEach(item => {
+      if (!hasItem(item, nightHogar, hija)) {
+        alerts.push({type:'danger', text:`${hija}: falta "${item}" en casa de ${hogarLabel}`});
+        allOk = false;
+      }
+    });
+  });
+  if (!alguienConf) {
+    alerts.push({type:'warn', text:'Sin prendas requeridas configuradas para este día. Config → Ropa requerida.'});
+  } else if (allOk) {
+    alerts.push({type:'ok', text:`Todo en orden en casa de ${hogarLabel} ✓`});
+  }
+
+  return alerts;
+}
+
+function renderAlerts(alerts, id) {
+  const icons = {ok:'✓',warn:'⚡',danger:'!'};
+  document.getElementById(id).innerHTML = alerts
+    .map(a=>`<div class="alert ${a.type}"><span class="alert-icon">${icons[a.type]}</span><span>${a.text}</span></div>`)
+    .join('');
+}
+
+// ── HOY ─────────────────────────────────────────────────
+function renderHoy() {
+  const now = new Date();
+  const dow = now.getDay();
+  document.getElementById('todayName').textContent = DIAS_FULL[dow];
+  document.getElementById('todayDate').textContent = now.getDate()+' de '+MESES[now.getMonth()]+' de '+now.getFullYear();
+  document.getElementById('headerMeta').innerHTML = DIAS[dow]+' '+now.getDate()+'/'+(now.getMonth()+1);
+
+  const c = custForDate(now);
+  document.getElementById('todayCustody').innerHTML =
+    `<div class="custody-tag ${c}"><span class="dot"></span>${c==='papa'?'Papá':'Mamá'}</div>`;
+
+  renderAlerts(getAlerts(now), 'alertsHoy');
+
+  const man = new Date(now); man.setDate(man.getDate()+1);
+  renderAlerts(getAlerts(man), 'alertsMañana');
+}
+
+// ── SEMANA ───────────────────────────────────────────────
+function renderSemana() {
+  const now = new Date();
+  const todayKey = dateKey(now);
+  let html = '';
+
+  for (let i=0; i<7; i++) {
+    const d = new Date(now); d.setDate(d.getDate()+i);
+    const dow = d.getDay();
+    const isToday = dateKey(d)===todayKey;
+    const alerts = getAlerts(d);
+    const hasDanger = alerts.some(a=>a.type==='danger');
+    const hasWarn   = alerts.some(a=>a.type==='warn');
+    const badgeCls  = !SCHOOL.has(dow)?'neutral':hasDanger?'danger':hasWarn?'neutral':'ok';
+    const badgeTxt  = !SCHOOL.has(dow)?'Sin colegio':hasDanger?'Faltan prendas':hasWarn?'Sin configurar':'Completo';
+    const c = custForDate(d);
+
+    const body = alerts.map(a=>
+      `<div class="check-item ${a.type==='ok'?'ok-item':a.type==='danger'?'bad-item':'info-item'}">
+        <span class="ci-icon">${a.type==='ok'?'✓':a.type==='danger'?'✗':'⚡'}</span>
+        <span>${a.text}</span>
+      </div>`
+    ).join('');
+
+    html += `
+      <div class="wday ${isToday?'today':''}">
+        <div class="wday-header" onclick="toggleW('wd-${i}')">
+          <div class="wday-left">
+            <div class="wday-name">${DIAS_FULL[dow]}${isToday?' · hoy':' · '+d.getDate()+'/'+(d.getMonth()+1)}</div>
+            <div class="wday-who" style="color:${c==='papa'?'var(--papa)':'var(--mama)'}">
+              ${c==='papa'?'👨 Papá':'👩 Mamá'}
+            </div>
+          </div>
+          <span class="wday-badge ${badgeCls}">${badgeTxt}</span>
+        </div>
+        <div class="wday-body ${isToday?'open':''}" id="wd-${i}">${body}</div>
+      </div>`;
+  }
+  document.getElementById('weekGrid').innerHTML = html;
+}
+
+function toggleW(id) { document.getElementById(id).classList.toggle('open'); }
+
+// ── STOCK ────────────────────────────────────────────────
+function renderStock() {
+  const items = stock[curHija][curHogar] || [];
+  const cats = [...new Set(items.map(p=>p.cat))].sort();
+  const list = document.getElementById('stockList');
+
+  if (!items.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">👗</div><div>Sin prendas para ${curHija} en casa de ${curHogar==='papa'?'Papá':'Mamá'}</div></div>`;
+    return;
+  }
+
+  let html = '';
+  cats.forEach(cat => {
+    html += `<div class="section-label">${cat}</div>`;
+    items.filter(p=>p.cat===cat).forEach(p => {
+      html += `
+        <div class="prenda-row">
+          <div class="prenda-info">
+            <div class="prenda-name">${p.name}${p.escuela==='si'?' 🎒':''}</div>
+          </div>
+          <div class="stepper">
+            <button onclick="updQty('${curHija}','${curHogar}',${p.id},-1)">−</button>
+            <span class="qty ${p.qty===0?'zero':''}">${p.qty}</span>
+            <button onclick="updQty('${curHija}','${curHogar}',${p.id},1)">+</button>
+          </div>
+          <button class="btn-del" onclick="delPrenda('${curHija}','${curHogar}',${p.id})">×</button>
+        </div>`;
+    });
+  });
+  list.innerHTML = html;
+}
+
+function updQty(hija,hogar,id,d) {
+  const p = stock[hija][hogar].find(x=>x.id===id);
+  if(p){p.qty=Math.max(0,p.qty+d);save();renderStock();renderHoy();renderSemana();}
+}
+
+function delPrenda(hija,hogar,id) {
+  stock[hija][hogar]=stock[hija][hogar].filter(x=>x.id!==id);
+  save();renderStock();renderHoy();renderSemana();showToast('Prenda eliminada');
+}
+
+function addPrenda() {
+  const name=document.getElementById('newName').value.trim();
+  const cat=document.getElementById('newCat').value;
+  const esc=document.getElementById('newEscuela').value;
+  if(!name||!cat){showToast('Completá nombre y categoría');return;}
+  stock[curHija][curHogar].push({id:++nextId,name,cat,qty:1,escuela:esc});
+  save();renderStock();renderHoy();renderSemana();
+  document.getElementById('newName').value='';
+  showToast('✓ Prenda agregada');
+}
+
+// ── CONFIG CALENDARIO ────────────────────────────────────
+function setCalMode(mode) {
+  calMode=mode;
+  document.getElementById('legPapa').className='leg-item'+(mode==='papa'?' sel-papa':'');
+  document.getElementById('legMama').className='leg-item'+(mode==='mama'?' sel-mama':'');
+  renderCal();
+}
+
+function renderCal() {
+  const now = new Date();
+  const todayKey = dateKey(now);
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate()-now.getDay()); // domingo
+
+  let html = DIAS.map(d=>`<div class="cal-header">${d}</div>`).join('');
+
+  for(let i=0;i<28;i++){
+    const d = new Date(startOfWeek); d.setDate(startOfWeek.getDate()+i);
+    const k = dateKey(d);
+    const isToday = k===todayKey;
+    const isPast = d < new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    const eff = dateCust[k] || weekCust[d.getDay()];
+    const cls = eff==='papa'?'papa-cell':'mama-cell';
+    html += `
+      <div class="cal-cell ${cls} ${isPast?'past':''} ${isToday?'today-cell':''}" onclick="setDay('${k}')">
+        <span class="cal-num">${d.getDate()}</span>
+        <span>${eff==='papa'?'👨':'👩'}</span>
+      </div>`;
+  }
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+function setDay(k) {
+  dateCust[k]=calMode;
+  save();renderCal();renderHoy();renderSemana();
+  showToast(`Día → ${calMode==='papa'?'Papá':'Mamá'}`);
+}
+
+// ── CONFIG ROPA REQUERIDA ────────────────────────────────
+
+// Catálogo unificado: todas las prendas únicas del stock (por nombre exacto), sin duplicados
+// Catálogo por nena: solo prendas de esa nena (ambos hogares), sin duplicados
+function getCatalogoHija(hija) {
+  const seen = new Set();
+  const lista = [];
+  ['papa','mama'].forEach(hogar => {
+    (stock[hija][hogar]||[]).forEach(p => {
+      if (!seen.has(p.name)) { seen.add(p.name); lista.push({name:p.name, cat:p.cat}); }
+    });
+  });
+  lista.sort((a,b)=>a.cat.localeCompare(b.cat)||a.name.localeCompare(b.name));
+  return lista;
+}
+
+let reqHija = 'Camila'; // nena seleccionada en config
+
+function renderReqConfig() {
+  // tabs de nena
+  let html = `
+    <div style="display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:3px;gap:3px;margin-bottom:16px;">
+      ${['Camila','Matilda'].map(h=>`
+        <button onclick="setReqHija('${h}')"
+          style="flex:1;padding:7px;border-radius:6px;border:none;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;
+            background:${reqHija===h?'var(--surface3)':'none'};
+            color:${reqHija===h?'var(--text)':'var(--text-muted)'};
+            font-weight:${reqHija===h?'600':'400'}">
+          ${h}
+        </button>`).join('')}
+    </div>`;
+
+  const catalogo = getCatalogoHija(reqHija);
+  const optsHtml = catalogo.length
+    ? catalogo.map(p=>`<option value="${p.name}">[${p.cat}] ${p.name}</option>`).join('')
+    : '<option value="" disabled>Primero cargá prendas en Stock</option>';
+
+  [1,2,3,4,5].forEach(dow => {
+    if (!required[reqHija]) required[reqHija] = {};
+    const items = required[reqHija][dow] || [];
+    const itemsHtml = items.length
+      ? items.map((it,idx)=>`
+          <div class="req-item">
+            <span>${it}</span>
+            <button class="btn-del" onclick="delReq(${dow},${idx})">×</button>
+          </div>`).join('')
+      : `<div style="font-size:12px;color:var(--text-dim);padding:4px 0">Sin prendas configuradas</div>`;
+
+    html += `
+      <div class="req-day-group">
+        <div class="req-day-title" onclick="toggleReq('rq-${dow}')">
+          ${DIAS_FULL[dow]}
+          <span style="font-size:11px;color:var(--text-muted);font-weight:400">${items.length} prenda${items.length!==1?'s':''}</span>
+        </div>
+        <div class="req-day-body" id="rq-${dow}">
+          <div>${itemsHtml}</div>
+          <div class="req-add">
+            <select id="ri-${dow}" style="flex:1;padding:7px 10px;border:1px solid var(--border2);border-radius:var(--rs);font-family:'Outfit',sans-serif;font-size:12px;background:var(--surface2);color:var(--text);outline:none;">
+              <option value="">Elegí una prenda de ${reqHija}…</option>
+              ${optsHtml}
+            </select>
+            <button class="btn-sm" onclick="addReq(${dow})">Agregar</button>
+          </div>
+        </div>
+      </div>`;
+  });
+  document.getElementById('reqConfig').innerHTML = html;
+}
+
+function setReqHija(h) { reqHija=h; renderReqConfig(); }
+function toggleReq(id) { document.getElementById(id).classList.toggle('open'); }
+
+function addReq(dow) {
+  const sel = document.getElementById('ri-'+dow);
+  const v = sel.value.trim();
+  if(!v){showToast('Elegí una prenda del listado');return;}
+  if(!required[reqHija]) required[reqHija]={};
+  if(!required[reqHija][dow]) required[reqHija][dow]=[];
+  if(required[reqHija][dow].includes(v)){showToast('Ya está en la lista');return;}
+  required[reqHija][dow].push(v);
+  save();renderReqConfig();renderHoy();renderSemana();
+  showToast('✓ Prenda requerida agregada');
+}
+
+function delReq(dow,idx) {
+  required[reqHija][dow].splice(idx,1);
+  save();renderReqConfig();renderHoy();renderSemana();
+}
+
+// ── UI ───────────────────────────────────────────────────
+function showTab(tab) {
+  ['hoy','semana','stock','config'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===tab?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach((b,i)=>{
+    b.classList.toggle('active',['hoy','semana','stock','config'][i]===tab);
+  });
+  if(tab==='stock')renderStock();
+  if(tab==='semana')renderSemana();
+  if(tab==='config'){renderCal();renderReqConfig();}
+}
+
+function selectHija(h) {
+  curHija=h;
+  document.querySelectorAll('.hija-btn').forEach(b=>b.classList.toggle('active',b.textContent===h));
+  renderStock();
+}
+
+function selectHogar(h) {
+  curHogar=h;
+  document.getElementById('btnPapa').classList.toggle('active',h==='papa');
+  document.getElementById('btnMama').classList.toggle('active',h==='mama');
+  renderStock();
+}
+
+function resetAll() {
+  if(!confirm('¿Eliminar todo? Esta acción no se puede deshacer.'))return;
+  stock=defStock();dateCust={};weekCust=defWeek();required=defRequired();
+  save();renderHoy();renderSemana();renderStock();renderCal();renderReqConfig();
+  showToast('Todo reseteado');
+}
+
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+// ── INIT ─────────────────────────────────────────────────
+renderHoy();
+</script>
+</body>
+</html>
